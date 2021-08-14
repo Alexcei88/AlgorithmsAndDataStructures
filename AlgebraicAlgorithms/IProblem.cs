@@ -2,6 +2,6 @@
 {
     public interface IProblem
     {
-        double Solve(string[] input);
+        string Solve(string[] input);
     }
 }

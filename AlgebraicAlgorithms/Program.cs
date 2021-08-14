@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using ConsoleTester.Problems.Power;
+using ConsoleTester.Problems.Fibonacci;
 
 namespace ConsoleTester
 {
@@ -8,16 +7,11 @@ namespace ConsoleTester
     {
         static void Main(string[] args)
         {
-            IProblem problem = new PowerOfTwo();
+            IProblem problem = new GoldenRationFibonacci();
             var tester = new Tester(problem,
-                @"3.Power\");
-            Stopwatch watch = Stopwatch.StartNew();
+                @"4.Fibo\");
             tester.RunTests();
-            watch.Stop();
             
-            watch.Restart();
-            
-            watch.Stop();
             Console.WriteLine("\nPress key to exit");
             Console.ReadKey();
         }

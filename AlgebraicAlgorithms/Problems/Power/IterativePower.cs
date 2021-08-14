@@ -2,10 +2,10 @@
 
 namespace ConsoleTester.Problems.Power
 {
-    public class IterativePowerApproach
+    public class IterativePower
         : IProblem
     {
-        public double Solve(string[] input)
+        public string Solve(string[] input)
         {
             double A = double.Parse(input[0], CultureInfo.InvariantCulture);
             long N = long.Parse(input[1]);
@@ -14,7 +14,7 @@ namespace ConsoleTester.Problems.Power
             for (long i = 1; i <= N; ++i)
                 p *= A;
 
-            return p;
+            return p.ToString();
         }
     }
 }

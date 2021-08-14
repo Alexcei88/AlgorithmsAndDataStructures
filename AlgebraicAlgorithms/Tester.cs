@@ -40,12 +40,10 @@ namespace ConsoleTester
         {
             try
             {
-                var expect = double.Parse(File.ReadAllText(outFile), CultureInfo.InvariantCulture);
+                var expect = File.ReadAllText(outFile);
                 var actual = _problem.Solve(File.ReadAllLines(inFile));
-                // Define the tolerance for variation in their values
-                double difference = Math.Abs(0.0000001);
 
-                return Math.Abs(expect - actual) <= difference;
+                return expect.Equals(actual);
             }
             catch (Exception e)
             {
