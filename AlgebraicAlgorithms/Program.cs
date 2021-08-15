@@ -1,5 +1,5 @@
 ﻿using System;
-using ConsoleTester.Problems.Fibonacci;
+using ConsoleTester.Problems.Primes;
 
 namespace ConsoleTester
 {
@@ -7,9 +7,9 @@ namespace ConsoleTester
     {
         static void Main(string[] args)
         {
-            IProblem problem = new GoldenRationFibonacci();
+            IProblem problem = new EratosphenNLogLogNMemoryOptimizedPrimes();
             var tester = new Tester(problem,
-                @"4.Fibo\");
+                @"5.Primes\");
             tester.RunTests();
             
             Console.WriteLine("\nPress key to exit");
