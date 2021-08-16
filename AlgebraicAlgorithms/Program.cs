@@ -7,7 +7,7 @@ namespace ConsoleTester
     {
         static void Main(string[] args)
         {
-            IProblem problem = new EratosphenNLogLogNMemoryOptimizedPrimes();
+            IProblem problem = new EratosphenSuperOptimizedPrimes();
             var tester = new Tester(problem,
                 @"5.Primes\");
             tester.RunTests();
