@@ -25,6 +25,18 @@ namespace ConsoleTester
                 @"BitBoards\3.Bitboard - Ладья\");
             tester.RunTests();
 
+            Console.WriteLine("============ Слон ============");
+            problem = new BishopWalk();
+            tester = new Tester(problem,
+                @"BitBoards\4.Bitboard - Слон\");
+            tester.RunTests();
+            
+            Console.WriteLine("============ Королева ============");
+            problem = new QueenWalk();
+            tester = new Tester(problem,
+                @"BitBoards\5.Bitboard - Ферзь\");
+            tester.RunTests();
+
             Console.WriteLine("\nPress key to exit");
             Console.ReadKey();
         }
