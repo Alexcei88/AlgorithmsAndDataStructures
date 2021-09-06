@@ -1,4 +1,4 @@
-﻿namespace ConsoleTester.Problems
+﻿namespace ConsoleTester.Sorts
 {
     public interface ISort
     {

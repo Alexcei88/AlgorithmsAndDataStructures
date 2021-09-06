@@ -6,8 +6,8 @@ namespace ConsoleTester
 {
     public class Tester
     {
-        private IProblem _problem;
-        private string _path;
+        private readonly IProblem _problem;
+        private readonly string _path;
 
         public Tester(IProblem problem, string path)
         {

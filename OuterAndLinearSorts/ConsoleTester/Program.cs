@@ -2,48 +2,59 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 using ConsoleTester.Problems;
-using ConsoleTester.Sorts;
 
 namespace ConsoleTester
 {
     static class Program
     {
+        private static string _inputFile = "1.bin";
         static void Main(string[] args)
         {
-            var inputArray = ReadArrayFromBinaryFile("1.bin");
+            var tempFile = Path.GetTempFileName();
 
-            var sorts = new List<ISort>
+            try
             {
-                new MergeSort(),
-                new MergeWithHeapSort(),
-                new BucketSort()
-            };
+                var problems = new List<ISortFromFileProblem>
+                {
+                    new MergeFromFileWithHeapSortProblem(_inputFile, tempFile),
+                    new MergeFromFileProblem(_inputFile, tempFile),
+                    new BucketSortProblem(_inputFile, tempFile)
+                };
 
-            foreach (var sort in sorts)
-            {
-                Console.WriteLine($"================ {sort.GetType().Name} ======================");
-                Stopwatch watch = Stopwatch.StartNew();
-                sort.Sort(inputArray);
-                watch.Stop();
-                Console.WriteLine($"Sort {sort.GetType().Name} - {watch.ElapsedMilliseconds} ms");
+                foreach (var problem in problems)
+                {
+                    Console.WriteLine($"================ {problem.GetType().Name} ======================");
+                    Stopwatch watch = Stopwatch.StartNew();
+                    problem.Sort();
+                    watch.Stop();
+                    Console.WriteLine($"Sort {problem.GetType().Name}: Hash {CalculateMD5(tempFile)} - {watch.ElapsedMilliseconds} ms");
+                }
+
+                Console.WriteLine("\nPress key to exit");
+                Console.ReadKey();
             }
-            
-            Console.WriteLine("\nPress key to exit");
-            Console.ReadKey();
+            catch (Exception ex)
+            {
+                // ignored
+            }
+            finally
+            {
+                File.Delete(tempFile);
+            }
         }
 
-        private static ushort[] ReadArrayFromBinaryFile(string path)
+        private static string CalculateMD5(string path)
         {
-            List<ushort> array = new List<ushort>();
-            using var reader = new BinaryReader(File.Open(path, FileMode.Open));
-            while (reader.PeekChar() > -1)
+            using (var md5 = MD5.Create())
             {
-                ushort number = reader.ReadUInt16();
-                array.Add(number);
+                using (var stream = File.OpenRead(path))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return Convert.ToBase64String(hash);
+                }
             }
-
-            return array.ToArray();
         }
     }
 }

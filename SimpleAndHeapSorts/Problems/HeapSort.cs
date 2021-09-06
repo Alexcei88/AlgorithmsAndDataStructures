@@ -31,8 +31,8 @@ namespace ConsoleTester.Problems
             int L = 2 * root + 1;
             int R = 2 * root + 2;
             int X = root;
-            if (L < size && L > X) X = L;
-            if (R < size && R > X) X = R;
+            if (L < size && _array[L] > _array[X]) X = L;
+            if (R < size && _array[R] > _array[X]) X = R;
             if (X == root) return;
             
             Swap(root, X);

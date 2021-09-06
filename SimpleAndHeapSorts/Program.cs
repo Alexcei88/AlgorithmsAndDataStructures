@@ -9,7 +9,7 @@ namespace ConsoleTester
         {
             var data = new[]
             {
-                "0.random", 
+                // "0.random", 
                 "1.digits", 
                 "2.sorted", 
                 // "3.revers"
@@ -32,7 +32,7 @@ namespace ConsoleTester
                     $@"sorting-tests\{d}\");
                 tester.RunTests();
             }
-
+            
             Console.WriteLine("================ ShellSort1 ======================");
             IProblem shellSort1 = new ShellSort((i, n) => n / (int)Math.Pow(2, i));
             foreach (var d in data)
