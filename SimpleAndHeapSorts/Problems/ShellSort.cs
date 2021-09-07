@@ -22,13 +22,13 @@ namespace ConsoleTester.Problems
             for (int it = 1;; ++it)
             {
                 int gap = _gapFunc(it, n);
-                if(gap <= 0)
+                if(gap <= 0 || gap >= _array.Length)
                     break;
-                for (int i = gap; i < _array.Length; i += gap)
+                for (int i = gap; i < _array.Length; ++i)
                 {
                     int j = i;
                     long current = _array[i];
-                    while (j > 0 && current < _array[j - gap])
+                    while (j >= gap && current < _array[j - gap])
                     {
                         _array[j] = _array[j - gap];
                         j -= gap;
