@@ -7,7 +7,7 @@ namespace ConsoleTester.Problems
         : ISortFromFileProblem
     {
         private readonly string _tempBinaryFile;
-        private readonly int _heapSortScore = 2048;
+        private readonly int _heapSortScore = 1024;
         
         public MergeFromFileWithHeapSortProblem(string inputFilePath, string outputFile)
         {
@@ -15,12 +15,14 @@ namespace ConsoleTester.Problems
             File.Copy(inputFilePath, _tempBinaryFile, true);
         }
 
+        public string ResultFile => _tempBinaryFile;
+
         public void Sort()
         {
             long length;
             {
                 using var inputStream = File.Open(_tempBinaryFile, FileMode.Open);
-                length = inputStream.Length;
+                length = inputStream.Length / sizeof(ushort);
             }
             
             Sort(0, (int)length);
@@ -47,12 +49,12 @@ namespace ConsoleTester.Problems
             ushort[] tempArray = ReadFromFile(l, r);
            
             using var outputStream = File.Open(_tempBinaryFile, FileMode.Open);
-            outputStream.Position = l;
+            outputStream.Position = l * sizeof(ushort);
             using var writer = new BinaryWriter(outputStream);
 
-            int idxL = l;
-            int idxR = mid;
-            while (idxL < mid && idxR < r)
+            int idxL = 0;
+            int idxR = mid - l;
+            while (idxL < mid - l && idxR < r - l)
             {
                 if (tempArray[idxL] < tempArray[idxR])
                 {
@@ -64,10 +66,10 @@ namespace ConsoleTester.Problems
                 }
             }
 
-            for (int i = idxL; i < mid; ++i)
+            for (int i = idxL; i < mid - l; ++i)
                 writer.Write(tempArray[idxL++]);
 
-            for (int i = idxR; i < r; ++i)
+            for (int i = idxR; i < r - l; ++i)
                 writer.Write(tempArray[idxR++]);
         }
         
@@ -82,7 +84,7 @@ namespace ConsoleTester.Problems
             
             // 3. write back
             using var outputStream = File.Open(_tempBinaryFile, FileMode.Open);
-            outputStream.Position = l;
+            outputStream.Position = l * sizeof(ushort);
             using var writer = new BinaryWriter(outputStream);
             foreach (var t in array)
             {
@@ -97,9 +99,9 @@ namespace ConsoleTester.Problems
             // 1. read from file
             {
                 using var inputStream = File.Open(_tempBinaryFile, FileMode.Open);
-                inputStream.Position = l;
+                inputStream.Position = l * sizeof(ushort);
                 using var reader = new BinaryReader(inputStream);
-                for (int i = 0; i < r - l; ++i)
+                for (int i = 0; i < length; ++i)
                 {
                     array[i] = reader.ReadUInt16();
                 }

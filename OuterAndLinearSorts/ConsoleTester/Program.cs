@@ -12,15 +12,17 @@ namespace ConsoleTester
         private static string _inputFile = "1.bin";
         static void Main(string[] args)
         {
-            var tempFile = Path.GetTempFileName();
-
+            var tempFile1 = Path.GetTempFileName();
+            var tempFile2 = Path.GetTempFileName();
+            var tempFile3 = Path.GetTempFileName();
+            
             try
             {
                 var problems = new List<ISortFromFileProblem>
                 {
-                    new MergeFromFileWithHeapSortProblem(_inputFile, tempFile),
-                    new MergeFromFileProblem(_inputFile, tempFile),
-                    new BucketSortProblem(_inputFile, tempFile)
+                    new MergeFromFileProblem(_inputFile, tempFile1),
+                    new MergeFromFileWithHeapSortProblem(_inputFile, tempFile2),
+                    new BucketSortProblem(_inputFile, tempFile3)
                 };
 
                 foreach (var problem in problems)
@@ -29,7 +31,7 @@ namespace ConsoleTester
                     Stopwatch watch = Stopwatch.StartNew();
                     problem.Sort();
                     watch.Stop();
-                    Console.WriteLine($"Sort {problem.GetType().Name}: Hash {CalculateMD5(tempFile)} - {watch.ElapsedMilliseconds} ms");
+                    Console.WriteLine($"Sort {problem.GetType().Name}: Hash - {CalculateMD5(problem.ResultFile)}, Time - {watch.ElapsedMilliseconds} ms");
                 }
 
                 Console.WriteLine("\nPress key to exit");
@@ -37,11 +39,13 @@ namespace ConsoleTester
             }
             catch (Exception ex)
             {
-                // ignored
+                Console.WriteLine($"Во время выполнения произошло исключение: {ex}");
             }
             finally
             {
-                File.Delete(tempFile);
+                File.Delete(tempFile1);
+                File.Delete(tempFile2);
+                File.Delete(tempFile3);
             }
         }
 

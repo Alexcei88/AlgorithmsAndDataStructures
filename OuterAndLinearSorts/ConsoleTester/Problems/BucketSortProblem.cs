@@ -18,20 +18,26 @@ namespace ConsoleTester.Problems
 
         public void Sort()
         {
-            var input = ReadArrayFromBinaryFile(_tempBinaryFile).ToArray();
+            var input = ReadArrayFromBinaryFile(_tempBinaryFile);
             var bucketSort = new BucketSort();
             input = bucketSort.Sort(input);
             WriteArrayToBinaryFile(_tempBinaryFile, input);
         }
-        
-        private IEnumerable<ushort> ReadArrayFromBinaryFile(string path)
+
+        public string ResultFile => _tempBinaryFile;
+
+        private ushort[] ReadArrayFromBinaryFile(string path)
         {
-            using var reader = new BinaryReader(File.Open(path, FileMode.Open));
-            while (reader.PeekChar() > -1)
+            List<ushort> array = new();
+            using var inputStream = File.Open(path, FileMode.Open);
+            using var reader = new BinaryReader(inputStream);
+            while (inputStream.Position != inputStream.Length)
             {
                 ushort number = reader.ReadUInt16();
-                yield return number;
+                array.Add(number);
             }
+
+            return array.ToArray();
         }
         
         private void WriteArrayToBinaryFile(string path, ushort[] input)

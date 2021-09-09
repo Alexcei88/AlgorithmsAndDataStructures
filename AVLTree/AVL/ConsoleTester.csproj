@@ -6,10 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="1.bin">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="2.bin">
+      <None Update="A01_Счастливые_билеты-1801-057a77\**\*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
