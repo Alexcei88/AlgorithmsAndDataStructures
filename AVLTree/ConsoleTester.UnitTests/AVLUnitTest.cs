@@ -3,16 +3,17 @@ using NUnit.Framework;
 
 namespace ConsoleTester.UnitTests
 {
-    public class BSTTests
+    public class AVLTests
     {
         [Test]
         public void ManyInsert_RandomNumber_Success()
         {
-            var tree = new BinarySearchTree();
+            var tree = new AVLTree();
             
             tree.Insert(4);
             tree.Insert(5);
             tree.Insert(6);
+            
             tree.Insert(7);
             tree.Insert(3);
             tree.Insert(1);
@@ -24,7 +25,7 @@ namespace ConsoleTester.UnitTests
         [Test]
         public void Search_AnyNumber_Success()
         {
-            var tree = new BinarySearchTree();
+            var tree = new AVLTree();
             
             tree.Insert(4);
             tree.Insert(5);
@@ -44,7 +45,7 @@ namespace ConsoleTester.UnitTests
         [Test]
         public void Remove_AnyNumber_Success()
         {
-            var tree = new BinarySearchTree();
+            var tree = new AVLTree();
             
             tree.Insert(4);
             tree.Insert(5);
@@ -66,14 +67,20 @@ namespace ConsoleTester.UnitTests
             tree.Remove(4);
             Assert.AreEqual("1 2 3 5 6 7 8 9 10", tree.ToString());
             
+            tree.Remove(9);
+            Assert.AreEqual("1 2 3 5 6 7 8 10", tree.ToString());
+
             tree.Remove(2);
-            Assert.AreEqual("1 3 5 6 7 8 9 10", tree.ToString());
+            Assert.AreEqual("1 3 5 6 7 8 10", tree.ToString());
 
             tree.Remove(6);
-            Assert.AreEqual("1 3 5 7 8 9 10", tree.ToString());
+            Assert.AreEqual("1 3 5 7 8 10", tree.ToString());
+            
+            tree.Remove(1);
+            Assert.AreEqual("3 5 7 8 10", tree.ToString());
             
             tree.Remove(100);
-            Assert.AreEqual("1 3 5 7 8 9 10", tree.ToString());
+            Assert.AreEqual("3 5 7 8 10", tree.ToString());
 
         }
     }
