@@ -7,21 +7,21 @@ Insert
 | Tree type | Random | Sequential |
 | --------- | ------ | ---------- |
 | BST       | 937    | 8815914    |
-| AVL       |        |            |
+| AVL       | 1494   | 417        |
 
 Search
 
 | Tree type | Random | Sequential |
 | --------- | ------ | ---------- |
 | BST       | 79     | 206609     |
-| AVL       |        |            |
+| AVL       | 68     | 45         |
 
 Remove
 
 | Tree type | Random | Sequential |
 | --------- | ------ | ---------- |
-| BST       | 91     | 209438     |
-| AVL       |        |            |
+| BST       | 91     | 794192     |
+| AVL       | 139    | 86         |
 
 
 
