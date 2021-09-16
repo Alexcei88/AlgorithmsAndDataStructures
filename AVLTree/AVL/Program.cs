@@ -31,17 +31,28 @@ namespace ConsoleTester
             experiment2.Insert();
             experiment2.Search();
             experiment2.Remove();
-
+            
             Console.WriteLine("=============== AVL tree experiments ==================");
             var experiment3 = new BSTWithRandomNumbersExperiment(new AVLTree(), N);
             experiment3.Insert();
             experiment3.Search();
             experiment3.Remove();
-
+            
             var experiment4 = new BSTWithSequentialNumbersExperiment(new AVLTree(), N);
             experiment4.Insert();
             experiment4.Search();
             experiment4.Remove();
+            
+            Console.WriteLine("=============== Random tree experiments ==================");
+            var experiment5 = new BSTWithRandomNumbersExperiment(new RandomSearchTree(), N);
+            experiment5.Insert();
+            experiment5.Search();
+            experiment5.Remove();
+            
+            var experiment6 = new BSTWithSequentialNumbersExperiment(new RandomSearchTree(), N);
+            experiment6.Insert();
+            experiment6.Search();
+            experiment6.Remove(); 
         }
     }
 }

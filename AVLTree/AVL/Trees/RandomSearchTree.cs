@@ -1,8 +1,9 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace ConsoleTester.Trees
 {
-    public class BinarySearchTree
+    public class RandomSearchTree
         : ITree
     {
         private class Node
@@ -10,9 +11,11 @@ namespace ConsoleTester.Trees
             public int Value;
             public Node Left;
             public Node Right;
+            public int Size;
         }
 
         private Node _root;
+        private readonly Random _random = new();
 
         public void Insert(int x)
         {
@@ -20,14 +23,15 @@ namespace ConsoleTester.Trees
             {
                 _root = new Node()
                 {
-                    Value = x
+                    Value = x,
+                    Size = 1,
                 };
                 return;
             }
 
-            Insert(_root, x);
+            _root = Insert(_root, x);
         }
-
+        
         public bool Search(int x)
         {
             var node = FindNode(x);
@@ -46,22 +50,57 @@ namespace ConsoleTester.Trees
                 root = new Node()
                 {
                     Value = x,
+                    Size = 1,
                 };
                 return root;
             }
 
-            if (x == root.Value)
-                return root; // для тестов сделаем, что мы просто ничего не вставляем
-            //throw new Exception("Такое значение уже есть в дереве. Нельзя вставить такое же значение");
-
-            if (x < root.Value)
-                root.Left = Insert(root.Left, x);
+            if (_random.Next() % (root.Size + 1) == 0)
+            {
+                root = InsertInRoot(root, x);
+            }
             else
-                root.Right = Insert(root.Right, x);
+            {
+                if (x == root.Value)
+                    return root; // для тестов сделаем, что мы просто ничего не вставляем
+                //throw new Exception("Такое значение уже есть в дереве. Нельзя вставить такое же значение");
 
+                if (x < root.Value)
+                    root.Left = Insert(root.Left, x);
+                else
+                    root.Right = Insert(root.Right, x);
+            }
+
+            UpdateSize(root);
             return root;
         }
 
+        private Node InsertInRoot(Node root, int x)
+        {
+            if (root == null)
+            {
+                root = new Node()
+                {
+                    Value = x,
+                    Size = 1,
+                };
+                return root;
+            }
+            
+            if (x == root.Value)
+                return root; // для тестов сделаем, что мы просто ничего не вставляем
+            //throw new Exception("Такое значение уже есть в дереве. Нельзя вставить такое же значение");
+            
+            if (x < root.Value)
+            {
+                root.Left = InsertInRoot(root.Left, x);
+                return SmallRightRotation(root);
+            }
+
+            root.Right = InsertInRoot(root.Right, x);
+            return SmallLeftRotation(root);
+        }
+        
         private Node FindNode(int x)
         {
             Node current = _root;
@@ -98,6 +137,11 @@ namespace ConsoleTester.Trees
                     int minX = 0;
                     node.Right = RemoveMinNode(node.Right, ref minX);
                     node.Value = minX;
+                    if ((node.Right != null || node.Left != null) && _random.Next() % (node.Left?.Size + node.Right?.Size) < (int) node.Left?.Size)
+                    {
+                        // node.Left will be root
+                        return SmallRightRotation(node);
+                    }
                     return node;
                 }
 
@@ -111,8 +155,7 @@ namespace ConsoleTester.Trees
 
             return node;
         }
-
-
+        
         public override string ToString()
         {
             if (_root == null)
@@ -142,6 +185,35 @@ namespace ConsoleTester.Trees
 
             node.Left = RemoveMinNode(node.Left, ref x);
             return node;
+        }
+        
+        private Node SmallRightRotation(Node p)
+        {
+            Node q = p.Left;
+
+            p.Left = q.Right;
+            q.Right = p;
+           
+            UpdateSize(p);
+            return q;
+        }
+        
+        private Node SmallLeftRotation(Node p)
+        {
+            Node q = p.Right;
+
+            p.Right = q.Left;
+            q.Left = p;
+            
+            UpdateSize(p);
+            return q;
+        }
+
+        private void UpdateSize(Node p)
+        {
+            int leftSize = p.Left?.Size ?? 0;
+            int rightSize = p.Right?.Size ?? 0;
+            p.Size = leftSize + rightSize + 1;
         }
     }
 }
