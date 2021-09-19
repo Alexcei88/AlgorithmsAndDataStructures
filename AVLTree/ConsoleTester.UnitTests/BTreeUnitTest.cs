@@ -86,35 +86,42 @@ namespace ConsoleTester.UnitTests
             tree.Insert(12);
             tree.Insert(13);
             tree.Insert(16);
+            tree.Insert(0);
 
-            Assert.AreEqual("1 2 3 4 5 6 7 8 9 10 11 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 1 2 3 4 5 6 7 8 9 10 11 12 13 15 16", tree.ToString());
 
             tree.Remove(11);
-            Assert.AreEqual("1 2 3 4 5 6 7 8 9 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 1 2 3 4 5 6 7 8 9 10 12 13 15 16", tree.ToString());
             
             tree.Remove(4);
-            Assert.AreEqual("1 2 3 5 6 7 8 9 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 1 2 3 5 6 7 8 9 10 12 13 15 16", tree.ToString());
             
             tree.Remove(9);
-            Assert.AreEqual("1 2 3 5 6 7 8 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 1 2 3 5 6 7 8 10 12 13 15 16", tree.ToString());
 
             tree.Remove(2);
-            Assert.AreEqual("1 3 5 6 7 8 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 1 3 5 6 7 8 10 12 13 15 16", tree.ToString());
 
             tree.Remove(6);
-            Assert.AreEqual("1 3 5 7 8 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 1 3 5 7 8 10 12 13 15 16", tree.ToString());
             
             tree.Remove(1);
-            Assert.AreEqual("3 5 7 8 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 3 5 7 8 10 12 13 15 16", tree.ToString());
             
             tree.Remove(100);
-            Assert.AreEqual("3 5 7 8 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 3 5 7 8 10 12 13 15 16", tree.ToString());
 
             tree.Remove(8);
-            Assert.AreEqual("3 5 7 10 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 3 5 7 10 12 13 15 16", tree.ToString());
             
             tree.Remove(10);
-            Assert.AreEqual("3 5 7 12 13 15 16", tree.ToString());
+            Assert.AreEqual("0 3 5 7 12 13 15 16", tree.ToString());
+            
+            tree.Remove(3);
+            Assert.AreEqual("0 5 7 12 13 15 16", tree.ToString());
+            
+            tree.Remove(13);
+            Assert.AreEqual("0 5 7 12 15 16", tree.ToString());
         }
     }
 }

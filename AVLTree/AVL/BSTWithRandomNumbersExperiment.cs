@@ -53,7 +53,7 @@ namespace ConsoleTester
             
             watcher.Stop();
             
-            Console.WriteLine($"Experiment {this.GetType().Name}, Remove - {watcher.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Experiment {GetType().Name}, Remove - {watcher.ElapsedMilliseconds} ms");
         }
         
     }

@@ -9,6 +9,7 @@ Insert
 | BST       | 937    | 8815914    |
 | AVL       | 1494   | 417        |
 | Random    | 1460   | 368        |
+| BTree     | 271    | 106        |
 
 Search
 
@@ -17,6 +18,7 @@ Search
 | BST       | 79     | 206609     |
 | AVL       | 68     | 45         |
 | Random    | 96     | 63         |
+| BTree     | 106    | 25         |
 
 Remove
 
@@ -25,6 +27,7 @@ Remove
 | BST       | 91     | 794192     |
 | AVL       | 139    | 86         |
 | Random    | 139    | 73         |
+| BTree     | 52     | 35         |
 
 
 * время в миллисекундах

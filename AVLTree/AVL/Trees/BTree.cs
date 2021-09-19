@@ -24,7 +24,8 @@ namespace ConsoleTester.Trees
             {
                 return _keyCount == Children.Length - 1;
             }
-            
+
+            public bool IsEmpty => _keyCount == 0;
             public void InsertKey(int key)
             {
                 if (_isLeaf)
@@ -60,9 +61,35 @@ namespace ConsoleTester.Trees
                 return false;
             }
 
-            public void Remove(int x)
-            {
+            public bool Remove(int x)
+            {   
+                // find index whose key is greater or equal k
+                int idx = SearchKey(x);
+                int t = Children.Length >> 1;
+
+                if (idx < _keyCount && _keys[idx] == x)
+                {
+                    // case 1
+                    if(_isLeaf)
+                        RemoveFromLeaf(idx);
+                    else
+                        RemoveFromNonLeaf(idx);
+                    return true;
+                }
+
+                // no key in the tree
+                if (_isLeaf)
+                    return false;
                 
+                if (Children[idx]._keyCount < t)
+                    // case2
+                    MergeWithParentAndSibling(idx);
+                
+                // above merge can reduce count of childs
+                if(idx > _keyCount)
+                    return Children[idx - 1].Remove(x);
+                
+                return Children[idx].Remove(x);                    
             }
             
             public override string ToString()
@@ -121,53 +148,45 @@ namespace ConsoleTester.Trees
                 ++_keyCount;
             }
 
-            private int GetMaximumFromChild(int idx)
+            private int GetMinFromChild(int idx)
             {
                 Node cur = Children[idx];
                 while (!cur._isLeaf)
                     cur = cur.Children[cur._keyCount];
   
-                // Return the last key of the leaf
                 return cur._keys[cur._keyCount - 1];
             }
             
-            private int GetMinimumFromChild(int idx)
+            private int GetMaxFromChild(int idx)
             {
                 Node cur = Children[idx];
                 while (!cur._isLeaf)
                     cur = cur.Children[0];
   
-                // Return the last key of the leaf
                 return cur._keys[0];
             }
 
-            private void MergeSibling(int idx)
+            private void MergeWithSibling(int idx)
             {
                 int t = Children.Length >> 1;
                 
                 Node left = Children[idx];
-                Node right = Children[idx+1];
+                Node right = Children[idx + 1];
 
                 left._keys[t - 1] = _keys[idx];
                 
-                // Copying the keys from C[idx+1] to C[idx] at the end
                 for (int i = 0; i < right._keyCount; ++i)
-                    left._keys[i+t] = right._keys[i];
+                    left._keys[i + t] = right._keys[i];
                 
-                // Copying the child pointers from C[idx+1] to C[idx]
                 if (!left._isLeaf)
                 {
                     for(int i = 0; i <= left._keyCount; ++i)
                         left.Children[i + t] = right.Children[i];
                 }
                 
-                // Moving all keys after idx in the current node one step before -
-                // to fill the gap created by moving keys[idx] to C[idx]
                 for (int i = idx + 1; i < _keyCount; ++i)
                     _keys[i - 1] = _keys[i];
                 
-                // Moving the child pointers after (idx+1) in the current node one
-                // step before
                 for (int i = idx + 1; i < _keyCount; ++i)
                     Children[i] = Children[i + 1];
 
@@ -188,10 +207,25 @@ namespace ConsoleTester.Trees
                 int t = Children.Length >> 1;
                 int k = _keys[idx];
 
+                // case 2a
                 if (Children[idx]._keyCount >= t)
                 {
-                    int min = GetMinimumFromChild(idx);
+                    int min = GetMinFromChild(idx);
                     _keys[idx] = min;
+                    Children[idx].Remove(min);
+                }
+                // case 2a
+                else if(Children[idx + 1]._keyCount >= t)
+                {
+                    int max = GetMaxFromChild(idx + 1);
+                    _keys[idx] = max;
+                    Children[idx + 1].Remove(max);
+                }
+                else
+                {
+                    // case 2b
+                    MergeWithSibling(idx);
+                    Children[idx].Remove(k);
                 }
             }
             
@@ -202,11 +236,64 @@ namespace ConsoleTester.Trees
                     ++idx;
                 return idx;
             }
+
+            private void MergeWithParentAndSibling(int idx)
+            {
+                int t = Children.Length >> 1;
+                if (idx != 0 && Children[idx - 1]._keyCount >= t)
+                {
+                    Node child = Children[idx];
+                    Node leftSibling = Children[idx - 1];
+                    
+                    for (int i = child._keyCount - 1; i >= 0; --i)
+                        child._keys[i + 1] = child._keys[i];
+                    
+                    if (!child._isLeaf)
+                    {
+                        for(int i = child._keyCount; i >= 0; --i)
+                            child.Children[i + 1] = child.Children[i];
+                    }
+                    child._keys[0] = _keys[idx - 1];
+                    if (!child._isLeaf)
+                        child.Children[0] = leftSibling.Children[leftSibling._keyCount];
+                    
+                    _keys[idx - 1] = leftSibling._keys[leftSibling._keyCount - 1];
+                    
+                    ++child._keyCount;
+                    --leftSibling._keyCount;
+                }
+                else if (idx != _keyCount && Children[idx + 1]._keyCount >= t)
+                {
+                    Node child = Children[idx];
+                    Node rightSibling = Children[idx + 1];
+                    
+                    child._keys[child._keyCount] = _keys[idx];
+                    if (!child._isLeaf)
+                        child.Children[child._keyCount + 1] = rightSibling.Children[0];
+
+                    _keys[idx] = rightSibling._keys[0];
+
+                    for (int i = 0; i < rightSibling._keyCount - 1; ++i)
+                        rightSibling._keys[i] = rightSibling._keys[i + 1];
+
+                    if(!rightSibling._isLeaf)
+                        for (int i = 0; i < rightSibling._keyCount; ++i)
+                            rightSibling.Children[i] = rightSibling.Children[i + 1];
+                    
+                    ++child._keyCount;
+                    --rightSibling._keyCount;
+                }
+                else
+                {
+                    if(idx == _keyCount)
+                        MergeWithSibling(idx - 1);
+                    else
+                        MergeWithSibling(idx);
+                }
+            }
         }
 
         private Node _root;
-        private readonly Random _random = new();
-
         private readonly int _minDegree;
 
         public BTree()
@@ -253,6 +340,14 @@ namespace ConsoleTester.Trees
 
         public void Remove(int x)
         {
+            if (_root == null)
+                return;
+
+            _root.Remove(x);
+            if (_root.IsEmpty)
+            {
+                _root = _root.Children[0];
+            }
         }
         
         public override string ToString()

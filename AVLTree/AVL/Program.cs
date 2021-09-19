@@ -52,7 +52,18 @@ namespace ConsoleTester
             var experiment6 = new BSTWithSequentialNumbersExperiment(new RandomSearchTree(), N);
             experiment6.Insert();
             experiment6.Search();
-            experiment6.Remove(); 
+            experiment6.Remove();
+
+            Console.WriteLine("=============== B-tree experiments ==================");
+            var experiment7 = new BSTWithRandomNumbersExperiment(new BTree(20), N);
+            experiment7.Insert();
+            experiment7.Search();
+            experiment7.Remove();
+            
+            var experiment8 = new BSTWithSequentialNumbersExperiment(new BTree(20), N);
+            experiment8.Insert();
+            experiment8.Search();
+            experiment8.Remove();
         }
     }
 }
