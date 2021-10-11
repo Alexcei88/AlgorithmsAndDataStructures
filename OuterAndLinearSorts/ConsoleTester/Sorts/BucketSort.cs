@@ -37,14 +37,15 @@ namespace ConsoleTester.Sorts
 
         private LinkedList<ushort>[] FillBuckets(ushort[] input, ushort max)
         {
-            var maxPlusOne = max + 1;
-            var buckets = new LinkedList<ushort>[input.Length];
+            var length = input.Length;
+            double maxPlusOne = max + 1;
+            var buckets = new LinkedList<ushort>[length];
             for (int i = 0; i < buckets.Length; ++i)
                 buckets[i] = new LinkedList<ushort>();
             
             foreach (var a in input)
             {
-                long bucketNumber = a * input.Length / maxPlusOne;
+                long bucketNumber = (long)(length * (a / maxPlusOne));
                 AddNumberToBucket(buckets[bucketNumber], a);
             }
 

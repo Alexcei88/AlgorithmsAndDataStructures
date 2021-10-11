@@ -20,9 +20,9 @@ namespace ConsoleTester
             {
                 var problems = new List<ISortFromFileProblem>
                 {
-                    new MergeFromFileProblem(_inputFile, tempFile1),
-                    new MergeFromFileWithHeapSortProblem(_inputFile, tempFile2),
-                    new BucketSortProblem(_inputFile, tempFile3)
+                    //new MergeFromFileWithHeapSortProblem(_inputFile, tempFile2),
+                    new BucketSortProblem(_inputFile, tempFile3),
+                    //new MergeFromFileProblem(_inputFile, tempFile1),
                 };
 
                 foreach (var problem in problems)
