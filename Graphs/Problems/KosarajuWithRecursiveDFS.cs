@@ -1,36 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
 namespace ConsoleTester.Problems
 {
-    public class RecursiveKosaraju
+    public class KosarajuWithRecursiveDFS
         : IProblem
     {
-        private int[][] _adjacencyVec;
+        private List<int>[] _adjacencyVec;
         private int[] _weights;
-        private int maxAdjPow = 5;
         private List<int[]> _components;
 
         public string[] Solve(string[] input)
         {
             _components = new List<int[]>();
             int N = int.Parse(input[0], CultureInfo.InvariantCulture);
-            _adjacencyVec = new int[N][];
+            _adjacencyVec = new List<int>[N];
             for (int i = 0; i < N; ++i)
             {
-                _adjacencyVec[i] = new int[maxAdjPow];
-                Array.Fill(_adjacencyVec[i], -1);
-            }
-
-            for (int i = 0; i < N; ++i)
-            {
-                int j = 0;
+                _adjacencyVec[i] = new();
                 if (!string.IsNullOrEmpty(input[i + 1]))
                 {
                     foreach (var v in input[i + 1].Split(' '))
-                        _adjacencyVec[i][j++] = int.Parse(v);
+                        _adjacencyVec[i].Add(int.Parse(v));
                 }
             }
 
@@ -76,7 +68,7 @@ namespace ConsoleTester.Problems
             }
         }
         
-        private void FullDepthRoundTree(int[][] vec, Stack<int> paths, byte[] visited)
+        private void FullDepthRoundTree(List<int>[] vec, Stack<int> paths, byte[] visited)
         {
             while (visited.Any(g => g == 0))
             {
@@ -88,19 +80,19 @@ namespace ConsoleTester.Problems
             }
         }
         
-        private void DepthRoundTree(int[][] vec, int current, Stack<int> paths, byte[] visited)
+        private void DepthRoundTree(List<int>[] vec, int current, Stack<int> paths, byte[] visited)
         {
             if(visited[current] == 1) 
                 return;
             
             visited[current] = 1;
-            foreach (var v in vec[current].Where(g => g >= 0))
+            foreach (var v in vec[current])
                 DepthRoundTree(vec, v, paths, visited);
             
             paths.Push(current);
         }
         
-        private void DepthRoundTree(int[][] vec, int current, byte[] visited, List<int> graph)
+        private void DepthRoundTree(List<int>[] vec, int current, byte[] visited, List<int> graph)
         {
             if(visited[current] == 1)
                 return;
@@ -108,25 +100,21 @@ namespace ConsoleTester.Problems
             visited[current] = 1;
             graph.Add(current);
 
-            var adjacencyEdges = vec[current].Where(g => g >= 0 && visited[g] == 0).OrderBy(g=> _weights[g]);
+            var adjacencyEdges = vec[current].Where(g => visited[g] == 0).OrderBy(g=> _weights[g]);
             foreach (var v in adjacencyEdges)
                 DepthRoundTree(vec, v, visited, graph);
         }
 
-        private int[][] CreateReverseAdjacencyVec()
+        private List<int>[] CreateReverseAdjacencyVec()
         {
-            var reverseAdjacencyVec = new int[_adjacencyVec.Length][];
+            var reverseAdjacencyVec = new List<int>[_adjacencyVec.Length];
+            for (int i = 0; i < reverseAdjacencyVec.Length; i++)
+                reverseAdjacencyVec[i] = new();
+            
             for (int i = 0; i < _adjacencyVec.Length; ++i)
             {
-                reverseAdjacencyVec[i] = new int[maxAdjPow];
-                Array.Fill(reverseAdjacencyVec[i], -1);
-            }
-
-            int[] index = new int[_adjacencyVec.Length];
-            for (int i = 0; i < _adjacencyVec.Length; ++i)
-            {
-                foreach (var a in _adjacencyVec[i].Where(g => g >= 0))
-                    reverseAdjacencyVec[a][index[a]++] = i;
+                foreach (var a in _adjacencyVec[i])
+                    reverseAdjacencyVec[a].Add(i);
             }
             return reverseAdjacencyVec;
         }
