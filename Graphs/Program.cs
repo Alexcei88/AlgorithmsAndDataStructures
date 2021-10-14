@@ -25,6 +25,11 @@ namespace ConsoleTester
                  @"Demukrona\");
             tester3.RunTests();
 
+            Console.WriteLine("############ Tarjyana #####################");
+            IProblem problem4 = new TarjyanaProblem();
+            var tester4 = new Tester(problem4,
+                @"Tarjyana\");
+            tester4.RunTests();
 
             Console.WriteLine("\nPress key to exit");
             Console.ReadKey();
