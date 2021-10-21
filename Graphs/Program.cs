@@ -36,7 +36,13 @@ namespace ConsoleTester
             var tester5 = new Tester(problem5,
                 @"Krascala\");
             tester5.RunTests();
-            
+
+            Console.WriteLine("############ Boruvka #####################");
+            IProblem problem6 = new BoruvkaProblem();
+            var tester6 = new Tester(problem6,
+                @"Boruvka\");
+            tester6.RunTests();
+
             Console.WriteLine("\nPress key to exit");
             Console.ReadKey();
         }

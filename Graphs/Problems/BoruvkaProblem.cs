@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ConsoleTester.Problems
 {
-    public class KrascalaProblem
+    public class BoruvkaProblem
         : IProblem
     {
         private record Edge
@@ -90,17 +90,23 @@ namespace ConsoleTester.Problems
 
         private bool Connected(int[] nodes, int p, int q)
         {
-            return nodes[p] == nodes[q];  
+            return Root(nodes, p) == Root(nodes, q);  
+        }
+
+        private int Root(int[] nodes, int p)
+        {
+            while (p != nodes[p])
+                p = nodes[p];
+
+            return p;
         }
         
         private void Union(int[] nodes, int p, int q)
         {
-            int pNode = nodes[p];
-            int qNode = nodes[q];
+            int pRoot = Root(nodes, p);
+            int qRoot = Root(nodes, q);
 
-            for (int i = 0; i < nodes.Length; ++i) 
-                if (nodes[i] == qNode) 
-                    nodes[i] = pNode;
+            nodes[qRoot] = pRoot;
         }
     }
 }
