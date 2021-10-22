@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace ConsoleTester.Problems
         : IProblem
     {
         private List<int>[] _adjacencyVec;
-        private int[] _weights;
+        private List<(int, bool)> _weights;
         private List<int[]> _components;
 
         public string[] Solve(string[] input)
@@ -30,44 +31,36 @@ namespace ConsoleTester.Problems
             Stack<int> paths = new Stack<int>();
             FullDepthRoundTree(reverseAdjacencyVec, paths, new byte[reverseAdjacencyVec.Length]);
             FillWeight(new Stack<int>(new Stack<int>(paths)));
-            
-            var visited = new byte[_adjacencyVec.Length];
-            while (paths.TryPop(out int current))
+
+            while (_weights.Any(g => g.Item2 == false))
             {
+                var notVisited = _weights.Where(g => g.Item2 == false);
+                var maxWeight = _weights.IndexOf(notVisited.Min());
                 var component = new List<int>();
-                DepthRoundTree(_adjacencyVec, current, visited, component);
-                if(component.Count > 2)
+                DepthRoundTree(_adjacencyVec, maxWeight, component);
+                if (component.Count > 2)
                     _components.Add(component.ToArray());
-                while (paths.TryPeek(out int next))
-                {
-                    if (visited[next] == 1)
-                        paths.Pop();
-                    else
-                        break;
-                }
             }
-            
-            var result = new List<string>();
-            result.Add(_components.Count.ToString());
+
+            var result = new List<string> { _components.Count.ToString() };
             foreach (var component in _components)
-            {
                 result.Add(string.Join(' ', component.OrderBy(g => g)));
-            }
-            
+
             return result.ToArray();
         }
 
         private void FillWeight(Stack<int> paths)
         {
-            _weights = new int[_adjacencyVec.Length];
-            int weight = 0;
+            var weights = new (int, bool)[paths.Count];
+            int accWeight = 0;
             while (paths.TryPop(out int next))
             {
-                _weights[next] = weight;
-                ++weight;
+                weights[next] = (accWeight, false);
+                ++accWeight;
             }
+            _weights = weights.ToList();
         }
-        
+
         private void FullDepthRoundTree(List<int>[] vec, Stack<int> paths, byte[] visited)
         {
             while (visited.Any(g => g == 0))
@@ -79,30 +72,31 @@ namespace ConsoleTester.Problems
                 DepthRoundTree(vec, index, paths, visited);
             }
         }
-        
+
         private void DepthRoundTree(List<int>[] vec, int current, Stack<int> paths, byte[] visited)
         {
-            if(visited[current] == 1) 
+            if (visited[current] == 1)
                 return;
-            
+
             visited[current] = 1;
             foreach (var v in vec[current])
                 DepthRoundTree(vec, v, paths, visited);
-            
+
             paths.Push(current);
         }
-        
-        private void DepthRoundTree(List<int>[] vec, int current, byte[] visited, List<int> graph)
+
+        private void DepthRoundTree(List<int>[] vec, int current, List<int> graph)
         {
-            if(visited[current] == 1)
+            if (_weights[current].Item2)
                 return;
-            
-            visited[current] = 1;
+
+            _weights[current] = (_weights[current].Item1, true);
             graph.Add(current);
 
-            var adjacencyEdges = vec[current].Where(g => visited[g] == 0).OrderBy(g=> _weights[g]);
+            var adjacencyEdges = vec[current].Where(g => _weights[g].Item2 == false)
+                .OrderBy(g => _weights[g].Item1);
             foreach (var v in adjacencyEdges)
-                DepthRoundTree(vec, v, visited, graph);
+                DepthRoundTree(vec, v, graph);
         }
 
         private List<int>[] CreateReverseAdjacencyVec()
@@ -110,12 +104,13 @@ namespace ConsoleTester.Problems
             var reverseAdjacencyVec = new List<int>[_adjacencyVec.Length];
             for (int i = 0; i < reverseAdjacencyVec.Length; i++)
                 reverseAdjacencyVec[i] = new();
-            
+
             for (int i = 0; i < _adjacencyVec.Length; ++i)
             {
                 foreach (var a in _adjacencyVec[i])
                     reverseAdjacencyVec[a].Add(i);
             }
+
             return reverseAdjacencyVec;
         }
     }
