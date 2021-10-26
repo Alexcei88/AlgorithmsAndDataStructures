@@ -18,10 +18,10 @@
         <None Update="Krascala\**\*">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Boruvka\test.0.in">
+        <None Update="Boruvka\**\*">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Boruvka\test.0.out">
+        <None Update="Dijkstra\**\*">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
