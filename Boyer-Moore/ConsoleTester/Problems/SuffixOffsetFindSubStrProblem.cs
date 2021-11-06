@@ -42,6 +42,5 @@ namespace ConsoleTester.Problems
             
             return shift;
         }
-        
     }
 }
